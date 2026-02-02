@@ -1,0 +1,12 @@
+import { RequestHandler } from "express";
+import { authLoginValidator } from "../validators/auth.validator";
+import * as userService from "../services/user.service"
+import { AppError } from "../utils/apperror";
+
+export const login: RequestHandler = async (req, res) => {
+    const data = authLoginValidator.parse(req.body);
+    const result = await userService.login(data.email, data.password);
+    if(!result) throw new AppError("Invalid credentials", 401);
+
+    res.status(200).json({ error: null, data: result });
+};

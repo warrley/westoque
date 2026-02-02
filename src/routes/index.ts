@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import userRoutes from "./user.routes"
+import userRoutes from "./user.routes";
+import authRoutes from "./auth.routes";
 
 const router = Router();
 
@@ -8,5 +9,6 @@ router.get('/ping', (req: Request, res: Response) => {
 });
 
 router.use("/users", userRoutes);
+router.use("/auth", authRoutes);
 
 export default router;
