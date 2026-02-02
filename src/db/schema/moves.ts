@@ -10,7 +10,7 @@ export const moves = pgTable("moves", {
     userID: uuid("user_id").notNull().references(() => users.id),
     type: moveTypeEnum().notNull(),
     unitPrice: integer("unit_price").notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    createdAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type Move = typeof moves.$inferSelect;

@@ -10,7 +10,7 @@ export const users = pgTable("users", {
     token: text(),
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type User = typeof users.$inferSelect;

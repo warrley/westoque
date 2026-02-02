@@ -5,7 +5,7 @@ export const categories = pgTable("categories", {
     name: text().notNull(),
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type Category = typeof categories.$inferSelect;

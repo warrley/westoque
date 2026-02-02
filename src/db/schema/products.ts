@@ -14,7 +14,7 @@ export const products = pgTable("products", {
     maximumQuantity: numeric("maximum_quatity").notNull().default("0"),
     deletedAt: timestamp("deleted_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export type Product = typeof products.$inferSelect;
