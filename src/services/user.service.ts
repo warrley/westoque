@@ -81,11 +81,11 @@ export const verifyPassword = async (password: string, hashedPassword: string) =
 };
 
 export const formatUser = (user: User) => {
-    const { password, ...userWithoutPassword } = user;
+    const { password, createdAt, updatedAt, deletedAt, token, ...userFormated } = user;
 
-    if(userWithoutPassword.avatar) {
-        userWithoutPassword.avatar = `${process.env.BASE_URL}/static/avatars/${userWithoutPassword.avatar}`;
+    if(userFormated.avatar) {
+        userFormated.avatar = `${process.env.BASE_URL}/static/avatars/${userFormated.avatar}`;
     }
 
-    return userWithoutPassword;
+    return userFormated;
 };
