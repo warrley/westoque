@@ -11,8 +11,8 @@ router.get('/ping', (req: Request, res: Response) => {
 
 router.use("/auth", authRoutes);
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
-// router.use("/users", userRoutes);
+router.use("/users", userRoutes);
 
 export default router;
