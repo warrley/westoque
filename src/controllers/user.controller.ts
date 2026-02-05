@@ -17,6 +17,14 @@ export const getUser: RequestHandler = async (req, res) => {
     res.status(200).json({ error: null, data: user });
 };
 
+export const deleteUser: RequestHandler = async (req, res) => {
+    const { id } = userIdValidator.parse(req.params);
+    const deletedUser = await userService.deleteUserById(id);
+    if(!deleteUser) throw new AppError("User not found", 404);
+
+    res.status(200).json({ error: null, data: deleteUser });
+};
+
 export const listUsers: RequestHandler = async (req, res) => {
     const { offset, limit } = listUsersValidator.parse(req.query);
     const users = await userService.listUsers(offset, limit);

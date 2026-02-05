@@ -4,7 +4,6 @@ import { NewUser, User, users } from "../db/schema";
 import bcrypt from "bcrypt";
 import { AppError } from "../utils/apperror";
 import crypto from "crypto";
-import { email } from "zod";
 
 export const login = async (email: string, password: string) => {
     const user = await getUserByEmail(email);
@@ -47,6 +46,18 @@ export const createUser = async (data: NewUser) => {
     return formatUser(user);
 };
 
+export const getUserByEmail = async (email: string) => {
+    const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1)
+
+    const user = result[0];
+    if(!user || user.deletedAt) return null;
+    return user;
+};
+
 export const getUserById = async (id: string) => {
     const result = await db
         .select()
@@ -56,7 +67,17 @@ export const getUserById = async (id: string) => {
     
     const user = result[0];
     if(!user || user.deletedAt) return null;
-    return user; 
+    return formatUser(user);
+};
+
+export const deleteUserById = async (id: string) => {
+    const result = await db
+        .update(users)
+        .set({ deletedAt: new Date() })
+        .where(eq(users.id, id))
+        .returning()
+
+    return result[0] ?? null;
 };
 
 export const listUsers = async (offset: number = 0, limit: number = 10) => {
@@ -84,17 +105,6 @@ export const validateToken = async (token: string) => {
 };
 
 // Helper functions
-export const getUserByEmail = async (email: string) => {
-    const result = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, email))
-        .limit(1)
-
-    const user = result[0];
-    if(!user || user.deletedAt) return null;
-    return user;
-};
 
 export const hashPassword = async (password: string ) => {
     return bcrypt.hash(password, 10);
