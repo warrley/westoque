@@ -4,6 +4,7 @@ import { NewUser, User, users } from "../db/schema";
 import bcrypt from "bcrypt";
 import { AppError } from "../utils/apperror";
 import crypto from "crypto";
+import { email } from "zod";
 
 export const login = async (email: string, password: string) => {
     const user = await getUserByEmail(email);
@@ -44,6 +45,18 @@ export const createUser = async (data: NewUser) => {
     const user = result[0];
 
     return formatUser(user);
+};
+
+export const getUserById = async (id: string) => {
+    const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, id))
+        .limit(1)
+    
+    const user = result[0];
+    if(!user || user.deletedAt) return null;
+    return user; 
 };
 
 export const listUsers = async (offset: number = 0, limit: number = 10) => {
