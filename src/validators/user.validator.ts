@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { email } from "zod";
 
 export const createUserValidator = z.object({
     name: z.string().min(2, "Name is required").max(255),
@@ -13,4 +13,12 @@ export const listUsersValidator = z.object({
 
 export const userIdValidator = z.object({
     id: z.uuid("Id format invalid")
+});
+
+export const updateUserValidator = z.object({
+    name: z.string().min(2).max(255).optional(),
+    email: z.email("Invalid e-mail format").optional(),
+    password: z.string().min(6).optional(),
+    isAdmin: z.boolean().optional(),
+    avatar: z.string().nullable().optional()
 });

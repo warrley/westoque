@@ -66,14 +66,39 @@ export const getUserById = async (id: string) => {
         .limit(1)
     
     const user = result[0];
-    if(!user || user.deletedAt) return null;
+    if(!user || user.deletedAt) throw new AppError("User not found", 404);
+    return formatUser(user);
+};
+
+export const updateUser = async (id: string, data: Partial<NewUser>) => {
+    const userToUpdate = await getUserById(id);
+    if(data.email && data.email !== userToUpdate.email && await getUserByEmail(data.email)) throw new AppError("E-mail already in use", 400);
+    
+    const updateData: Partial<NewUser> = {...data};
+    if(data.password) {
+        updateData.password = await hashPassword(data.password);
+    };
+    
+    updateData.updatedAt = new Date();
+    
+    const result = await db
+    .update(users)
+    .set(updateData)
+    .where(eq(users.id, id))
+    .returning();
+    
+    const user = result[0];
+    if(!user) return null;
+    
     return formatUser(user);
 };
 
 export const deleteUserById = async (id: string) => {
+    const userDeleted = await getUserById(id);
+
     const result = await db
         .update(users)
-        .set({ deletedAt: new Date() })
+        .set({ deletedAt: new Date(), email: `${userDeleted.email}.deleted` })
         .where(eq(users.id, id))
         .returning()
 
