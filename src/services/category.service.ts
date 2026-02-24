@@ -1,6 +1,6 @@
 import { eq, isNull, sql } from "drizzle-orm";
 import { db } from "../db/connection";
-import { categories, NewCategory, products } from "../db/schema";
+import { categories, Category, NewCategory, products } from "../db/schema";
 import { AppError } from "../utils/apperror";
 
 export const createCategory = async (data: NewCategory) => {
@@ -41,5 +41,19 @@ export const getCategory = async (uuid: string) => {
     
     const category = result[0];
     if(!category || category.deletedAt) throw new AppError("Category not found", 404);
+    return category;
+};
+
+export const updateCategory = async (id: string, data: Partial<NewCategory>) => {
+    const dataUpdated =  { ...data, updatedAt: new Date() };
+    const result = await db
+        .update(categories)
+        .set(dataUpdated)
+        .where(eq(categories.id, id))
+        .returning()
+
+    const category = result[0];
+    if(!category || category.deletedAt) throw new AppError("Category not found", 404);
+    
     return category;
 };

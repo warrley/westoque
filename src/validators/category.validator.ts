@@ -11,3 +11,7 @@ export const listCategoriesValidator = z.object({
 export const getCategoryValidator = z.object({
     id: z.uuid()
 });
+
+export const updateCategoryValidator = z.object({
+    name: z.string().min(1, "Name is required").max(255)
+});
