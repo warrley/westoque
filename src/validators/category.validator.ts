@@ -7,3 +7,7 @@ export const createCategoryValidator = z.object({
 export const listCategoriesValidator = z.object({
     includeProductCount: z.coerce.boolean().optional().default(false)
 });
+
+export const getCategoryValidator = z.object({
+    id: z.uuid()
+});

@@ -26,7 +26,7 @@ export const deleteUser: RequestHandler = async (req, res) => {
 export const listUsers: RequestHandler = async (req, res) => {
     const { offset, limit } = listUsersValidator.parse(req.query);
     const users = await userService.listUsers(offset, limit);
-    console.log(users)
+    // console.log(users);
     res.status(200).json({ error: null, data: users });
 };
 

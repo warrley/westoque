@@ -1,6 +1,7 @@
 import { eq, isNull, sql } from "drizzle-orm";
 import { db } from "../db/connection";
 import { categories, NewCategory, products } from "../db/schema";
+import { AppError } from "../utils/apperror";
 
 export const createCategory = async (data: NewCategory) => {
     const result = await db.insert(categories).values(data).returning();
@@ -30,4 +31,15 @@ export const listCategories = async (includeProductCount: boolean) => {
         .where(isNull(categories.deletedAt));
 
     return categoriesList;
-}
+};
+
+export const getCategory = async (uuid: string) => {
+    const result = await db
+    .select()
+    .from(categories)
+    .where(eq(categories.id, uuid))
+    
+    const category = result[0];
+    if(!category || category.deletedAt) throw new AppError("Category not found", 404);
+    return category;
+};
