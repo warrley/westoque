@@ -4,6 +4,7 @@ import { NewUser, User, users } from "../db/schema";
 import bcrypt from "bcrypt";
 import { AppError } from "../utils/apperror";
 import crypto from "crypto";
+import { deleteAvatar } from "./file.service";
 
 export const login = async (email: string, password: string) => {
     const user = await getUserByEmail(email);
@@ -78,7 +79,11 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
     if(data.password) {
         updateData.password = await hashPassword(data.password);
     };
-    
+
+    if(data.avatar && userToUpdate.avatar && data.avatar !== userToUpdate.avatar){
+        await deleteAvatar(userToUpdate.avatar);
+    };
+
     updateData.updatedAt = new Date();
     
     const result = await db
