@@ -88,3 +88,14 @@ export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
     if(!result[0]) throw new AppError("It was not possible update product", 400);
     return result;
 };
+
+export const deleteProduct = async (id: string) => {
+    const result = await db
+        .update(products)
+        .set({ deletedAt: new Date() })
+        .where(eq(products.id, id))
+        .returning()
+    console.log(result[0])
+    if(!result[0]) throw new AppError("It was not possible delete product", 400);
+    return result[0];
+};

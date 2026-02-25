@@ -30,3 +30,10 @@ export const updateProduct: RequestHandler = async (req, res) => {
 
     res.status(200).json({ error: null, data: product });
 };
+
+export const deleteProduct: RequestHandler = async (req, res) => {
+    const { id } = getProductValidator.parse(req.params);
+    const product = await productService.deleteProduct(id);
+
+    res.status(200).json({ error: null, data: product })
+};
