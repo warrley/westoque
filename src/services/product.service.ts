@@ -48,3 +48,26 @@ export const listProduct  = async (offset: number, limit: number, name?: string)
 
     return productList;
 };
+
+export const getProduct = async (id: string) => {
+    const result = await db
+        .select({
+            id: products.id,
+            name: products.name,
+            categoryId: categories.id,
+            categoryName: categories.name,
+            unitPrice: products.unitPrice,
+            unitType: products.unitType,
+            quantity: products.quantity,
+            minimumQuantity: products.minimumQuantity,
+            maximumQuantity: products.maximumQuantity,
+            createdAt: products.createdAt,
+            updatedAt: products.updatedAt,
+        })
+        .from(products)
+        .leftJoin(categories, eq(products.categoryId, categories.id))
+        .where(and(isNull(products.deletedAt), eq(products.id, id)));
+
+    if(!result[0]) throw new AppError("Product not found", 404);
+    return result[0];
+};

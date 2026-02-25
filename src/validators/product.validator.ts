@@ -18,4 +18,8 @@ export const listProductValidator = z.object({
     name: z.string("Name is required").min(2).optional(),
     offset: z.coerce.number().int().min(0).optional().default(1),
     limit: z.coerce.number().int().min(1).optional().default(10)
-})
+});
+
+export const getProductValidator = z.object({
+    id: z.uuid()
+});
