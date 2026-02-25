@@ -71,3 +71,20 @@ export const getProduct = async (id: string) => {
     if(!result[0]) throw new AppError("Product not found", 404);
     return result[0];
 };
+
+export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
+    if(data.categoryId) {
+        const category = await categoryService.getCategory(data.categoryId);
+        if(!category) throw new AppError("Category not found", 404);
+    };
+
+    const updatedData = { ...data, updatedAt: new Date() };
+    const result = await db
+        .update(products)
+        .set(updatedData)
+        .where(eq(products.id, id))
+        .returning()
+    
+    if(!result[0]) throw new AppError("It was not possible update product", 400);
+    return result;
+};
