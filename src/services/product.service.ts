@@ -17,11 +17,10 @@ export const createProduct = async (data: NewProduct) => {
 };
 
 export const listProduct  = async (offset: number, limit: number, name?: string) => {
-    console.log(name)
     const condition = name 
         ? and(
             isNull(products.deletedAt),
-            ilike(products.name, `%${name}%`)
+            ilike(products.name, `%${name}`)
         )
         : isNull(products.deletedAt);
 
