@@ -39,9 +39,8 @@ export const getCategory = async (uuid: string) => {
     .from(categories)
     .where(eq(categories.id, uuid))
     
-    const category = result[0];
-    if(!category || category.deletedAt) throw new AppError("Category not found", 404);
-    return category;
+    if(!result[0] || result[0].deletedAt) throw new AppError("Category not found", 404);
+    return result[0];
 };
 
 export const updateCategory = async (id: string, data: Partial<NewCategory>) => {
@@ -52,10 +51,8 @@ export const updateCategory = async (id: string, data: Partial<NewCategory>) => 
         .where(eq(categories.id, id))
         .returning()
 
-    const category = result[0];
-    if(!category || category.deletedAt) throw new AppError("Category not found", 404);
-    
-    return category;
+    if(!result[0] || result[0].deletedAt) throw new AppError("Category not found", 404);
+    return result[0];
 };
 
 export const deleteCategory = async (id: string) => {
@@ -73,8 +70,6 @@ export const deleteCategory = async (id: string) => {
         .where(eq(categories.id, id))
         .returning()
     
-    const category = result[0];
-    if(!category) throw new AppError("Category not found", 404);
-
-    return category;
+    if(!result[0]) throw new AppError("Category not found", 404);
+    return result[0];
 };

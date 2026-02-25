@@ -10,7 +10,7 @@ export const login = async (email: string, password: string) => {
     const user = await getUserByEmail(email);
     if(!user) return null;
 
-    if(!await verifyPassword(password, user.password)) return null;
+    if(!await verifyPassword(password, user.password)) throw new AppError("Invalid credentials", 401);
 
     const token = crypto.randomBytes(32).toString("hex");
 
@@ -42,9 +42,7 @@ export const createUser = async (data: NewUser) => {
     };
 
     const result = await db.insert(users).values(newUser).returning();
-    const user = result[0];
-
-    return formatUser(user);
+    return formatUser(result[0]);
 };
 
 export const getUserByEmail = async (email: string) => {
@@ -54,9 +52,8 @@ export const getUserByEmail = async (email: string) => {
         .where(eq(users.email, email))
         .limit(1)
 
-    const user = result[0];
-    if(!user || user.deletedAt) return null;
-    return user;
+    if(!result[0] || result[0].deletedAt) return null;
+    return result[0];
 };
 
 export const getUserById = async (id: string) => {
@@ -66,9 +63,8 @@ export const getUserById = async (id: string) => {
         .where(eq(users.id, id))
         .limit(1)
     
-    const user = result[0];
-    if(!user || user.deletedAt) throw new AppError("User not found", 404);
-    return formatUser(user);
+    if(!result[0] || result[0].deletedAt) throw new AppError("User not found", 404);
+    return formatUser(result[0]);
 };
 
 export const updateUser = async (id: string, data: Partial<NewUser>) => {
@@ -92,10 +88,8 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
     .where(eq(users.id, id))
     .returning();
     
-    const user = result[0];
-    if(!user) return null;
-    
-    return formatUser(user);
+    if(!result[0]) return null;
+    return formatUser(result[0]);
 };
 
 export const deleteUserById = async (id: string) => {
@@ -128,10 +122,8 @@ export const validateToken = async (token: string) => {
         .where(eq(users.token, token))
         .limit(1)
     
-    const user = result[0];
-    if(!user || user.deletedAt) return null;
-
-    return user;
+    if(!result[0] || result[0].deletedAt) return null;
+    return result[0];
 };
 
 // Helper functions
