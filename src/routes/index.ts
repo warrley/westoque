@@ -3,6 +3,7 @@ import userRoutes from "./user.routes";
 import authRoutes from "./auth.routes";
 import categoriesRoutes from "./categories.routes";
 import productsRoutes from "./products.routes";
+import movesRoutes from "./moves.routes";
 import { authMiddleware } from '../middlewares/aut.middleware';
 
 const router = Router();
@@ -19,6 +20,8 @@ router.use("/users", userRoutes);
 
 router.use("/categories", categoriesRoutes);
 
-router.use("/products", productsRoutes)
+router.use("/products", productsRoutes);
+
+router.use("/moves", movesRoutes);
 
 export default router;

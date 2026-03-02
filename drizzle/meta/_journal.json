@@ -15,6 +15,13 @@
       "when": 1770035696497,
       "tag": "0001_hard_rattler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772443861996,
+      "tag": "0002_unknown_sentinels",
+      "breakpoints": true
     }
   ]
 }
