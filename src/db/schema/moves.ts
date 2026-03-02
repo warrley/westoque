@@ -8,6 +8,7 @@ export const moves = pgTable("moves", {
     id: uuid().primaryKey().defaultRandom(),
     productId: uuid("product_id").notNull().references(() => products.id),
     userID: uuid("user_id").notNull().references(() => users.id),
+    quantity: text("quantity").notNull(),
     type: moveTypeEnum().notNull(),
     unitPrice: integer("unit_price").notNull(),
     createdAt: timestamp("updated_at").notNull().defaultNow(),
