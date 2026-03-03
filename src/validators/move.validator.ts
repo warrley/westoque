@@ -6,3 +6,10 @@ export const addMoveValidator = z.object({
     type: moveTypeEnum,
     quantity: z.coerce.number().positive("Quantity must be positive").transform(String)
 });
+
+export const listMovesValidator = z.object({
+    productId: z.uuid("Invalid format product id").optional(),
+    offset: z.coerce.number().min(0).default(0),
+    limit: z.coerce.number().min(1).default(10)
+});
+export type ListMovesInput = z.infer<typeof listMovesValidator>;
