@@ -12,5 +12,12 @@ export const getMovesSummary: RequestHandler = async (req, res) => {
     const query = dateRangeValidator.parse(req.query);
     const data = await dashboardService.getMovesSummary(query);
 
-    res.status(200).json({ error: null, data: data });
+    res.status(200).json({ error: null, data });
+};
+
+export const getMovesGraph: RequestHandler = async (req, res) => {
+    const query = dateRangeValidator.parse(req.query);
+    const data = await dashboardService.getMovesGraph(query);
+
+    res.status(200).json({ error: null, data });
 };
