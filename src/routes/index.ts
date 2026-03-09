@@ -4,6 +4,7 @@ import authRoutes from "./auth.routes";
 import categoriesRoutes from "./categories.routes";
 import productsRoutes from "./products.routes";
 import movesRoutes from "./moves.routes";
+import dashboardRoutes from "./dashboard.routes";
 import { authMiddleware } from '../middlewares/aut.middleware';
 
 const router = Router();
@@ -23,5 +24,7 @@ router.use("/categories", categoriesRoutes);
 router.use("/products", productsRoutes);
 
 router.use("/moves", movesRoutes);
+
+router.use("/dashboard", dashboardRoutes);
 
 export default router;
