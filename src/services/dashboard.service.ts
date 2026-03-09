@@ -61,30 +61,54 @@ export const getMovesGraph = async (range: DateRangeInput) => {
         endDate.setUTCHours(23, 59, 59, 999);
         conditions.push(lte(moves.createdAt, new Date (range.endDate)));
     };
-
+    
     const dateFormatted = sql<string>`TO_CHAR(${moves.createdAt}, 'YYYY-MM-DD')`;
-
+    
     const result = await db
-        .select({
-            totalValue: sql<number>`SUM(${products.quantity} * ${products.unitPrice})`
-        })
-        .from(moves)
-        .where(and(...conditions))
-        .groupBy(dateFormatted)
-        .orderBy(dateFormatted)
+    .select({
+        totalValue: sql<number>`SUM(${products.quantity} * ${products.unitPrice})`
+    })
+    .from(moves)
+    .where(and(...conditions))
+    .groupBy(dateFormatted)
+    .orderBy(dateFormatted)
     
     return result;
 };
 
 export const getLowStockProducts = async () => {
     const results = await db
+    .select()
+    .from(products)
+    .where(and(
+        isNull(products.deletedAt),
+        sql`${products.quantity} <= (${products.minimumQuantity}*1.1)`
+    ))
+    .orderBy(products.quantity)
+    
+    return results
+};
+
+export const getStagnantProducts = async (range: DateRangeInput) => {
+    const conditions = [eq(moves.type, "out")];
+    
+    if(range.startDate) conditions.push(gte(moves.createdAt, new Date(range.startDate)));
+    
+    if(range.endDate) {
+        const endDate = new Date(range.endDate);
+        endDate.setUTCHours(23, 59, 59, 999);
+        conditions.push(lte(moves.createdAt, new Date (range.endDate)));
+    };
+    
+    const results = await db
         .select()
         .from(products)
         .where(and(
             isNull(products.deletedAt),
-            sql`${products.quantity} <= (${products.minimumQuantity}*1.1)`
+            sql`${products.id} NOT IN (
+                SELECT ${moves.productId} FROM ${moves} WHERE ${and(...conditions)}
+            )`
         ))
-        .orderBy(products.quantity)
     
-    return results
+    return results;
 };
