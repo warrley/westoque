@@ -75,3 +75,16 @@ export const getMovesGraph = async (range: DateRangeInput) => {
     
     return result;
 };
+
+export const getLowStockProducts = async () => {
+    const results = await db
+        .select()
+        .from(products)
+        .where(and(
+            isNull(products.deletedAt),
+            sql`${products.quantity} <= (${products.minimumQuantity}*1.1)`
+        ))
+        .orderBy(products.quantity)
+    
+    return results
+};
